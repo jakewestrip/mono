@@ -59,6 +59,11 @@ LONG CALLBACK seh_handler(EXCEPTION_POINTERS* ep);
 #define MONO_ARCH_USE_SIGACTION
 #endif /* __HAIKU__ */
 
+#if defined(HOST_SERENITY)
+#define MONO_ARCH_USE_SIGACTION
+#define HAVE_WORKING_SIGALTSTACK
+#endif
+
 #endif /* HAVE_WORKING_SIGALTSTACK */
 #endif /* !HOST_WIN32 */
 

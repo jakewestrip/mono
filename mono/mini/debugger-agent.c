@@ -1595,6 +1595,7 @@ transport_handshake (void)
 	 * Set TCP_NODELAY on the socket so the client receives events/command
 	 * results immediately.
 	 */
+#ifdef HOST_SERENITY
 	if (conn_fd) {
 		int flag = 1;
 		int result = setsockopt (conn_fd,
@@ -1607,7 +1608,8 @@ transport_handshake (void)
 
 	set_keepalive ();
 #endif
-	
+#endif
+
 	disconnected = FALSE;
 	return TRUE;
 }

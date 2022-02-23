@@ -47,6 +47,19 @@ mono_sigctx_to_monoctx (void *sigctx, MonoContext *mctx)
 	mctx->esi = 0xDEADBEEF;
 	mctx->edi = 0xDEADBEEF;
 	mctx->eip = 0xDEADBEEF;
+#elif defined (HOST_SERENITY)
+    ucontext_t *ctx = (ucontext_t*)sigctx;
+
+    mctx->eax = ctx->uc_mcontext.eax;
+    mctx->ebx = ctx->uc_mcontext.ebx;
+    mctx->ecx = ctx->uc_mcontext.ecx;
+    mctx->edx = ctx->uc_mcontext.edx;
+    mctx->ebp = ctx->uc_mcontext.ebp;
+    mctx->esp = ctx->uc_mcontext.esp;
+    mctx->esi = ctx->uc_mcontext.esi;
+    mctx->edi = ctx->uc_mcontext.edi;
+    mctx->eip = ctx->uc_mcontext.eip;
+
 #elif MONO_CROSS_COMPILE
 	g_assert_not_reached ();
 #elif defined(MONO_SIGNAL_USE_UCONTEXT_T)
@@ -105,6 +118,18 @@ mono_monoctx_to_sigctx (MonoContext *mctx, void *sigctx)
 {
 #if defined(HOST_WATCHOS)
 	printf("WARNING: mono_arch_monoctx_to_sigctx() called!\n");
+#elif defined(HOST_SERENITY)
+    ucontext_t *ctx = (ucontext_t*)sigctx;
+
+    ctx->uc_mcontext.eax = mctx->eax;
+    ctx->uc_mcontext.ebx = mctx->eax;
+    ctx->uc_mcontext.ecx = mctx->eax;
+    ctx->uc_mcontext.edx = mctx->eax;
+    ctx->uc_mcontext.ebp = mctx->eax;
+    ctx->uc_mcontext.esp = mctx->eax;
+    ctx->uc_mcontext.esi = mctx->eax;
+    ctx->uc_mcontext.edi = mctx->eax;
+    ctx->uc_mcontext.eip = mctx->eax;
 #elif MONO_CROSS_COMPILE
 	g_assert_not_reached ();
 #elif defined(MONO_SIGNAL_USE_UCONTEXT_T)

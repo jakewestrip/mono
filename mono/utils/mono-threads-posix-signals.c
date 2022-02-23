@@ -94,6 +94,8 @@ suspend_signal_get (void)
 	if (suspend_signum == -1)
 		suspend_signum = mono_threads_suspend_search_alternative_signal ();
 	return suspend_signum;
+#elif defined(HOST_SERENITY)
+    return SIGXFSZ;
 #else
 #if defined(__APPLE__) || defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 	return SIGXFSZ;

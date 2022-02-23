@@ -10,11 +10,13 @@
 
 */
 
+#include <config.h>
+
 #if defined(_WIN32) && (!(defined(_CRT_SECURE_NO_WARNINGS)))
         #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#if defined(__APPLE__) || defined(IOAPI_NO_64) || defined(__HAIKU__)
+#if defined(__APPLE__) || defined(IOAPI_NO_64) || defined(__HAIKU__) || defined(HOST_SERENITY)
 // In darwin and perhaps other BSD variants off_t is a 64 bit value, hence no need for specific 64 bit functions
 #define FOPEN_FUNC(filename, mode) fopen(filename, mode)
 #define FTELLO_FUNC(stream) ftello(stream)

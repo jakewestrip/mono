@@ -20,6 +20,10 @@ Abstract:
 #include <config.h>
 #include <mono/utils/mono-compiler.h>
 
+#if defined (HOST_SERENITY)
+#undef HAVE_CGROUP_SUPPORT
+#endif
+
 #if HAVE_CGROUP_SUPPORT
 
 #include <unistd.h>

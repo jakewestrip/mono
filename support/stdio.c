@@ -20,7 +20,11 @@ gint32
 Mono_Posix_Syscall_L_ctermid (void)
 {
 #ifndef HOST_WIN32
+#if defined(HOST_SERENITY)
+    return 100; //TODO: revisit this hack
+#else
 	return L_ctermid;
+#endif
 #else
 	return -1;
 #endif
@@ -31,6 +35,8 @@ Mono_Posix_Syscall_L_cuserid (void)
 {
 #if defined(__APPLE__) || defined (__OpenBSD__) || defined (HOST_WIN32)
 	return -1;
+#elif defined(HOST_SERENITY)
+    return 100; //TODO: revisit this hack
 #else
 	return L_cuserid;
 #endif
@@ -155,7 +161,11 @@ Mono_Posix_Stdlib_stderr (void)
 gint32
 Mono_Posix_Stdlib_TMP_MAX (void)
 {
+#if defined(HOST_SERENITY)
+    return 238328; //TODO: revisit this hack
+#else
 	return TMP_MAX;
+#endif
 }
 
 void*

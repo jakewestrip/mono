@@ -471,6 +471,15 @@ case "$host" in
 		use_sigposix=yes
 		with_sigaltstack=no
 		;;
+	*-*-serenity*)
+	    AC_DEFINE(HOST_SERENITY, 1, [Building for SerenityOS])
+	    with_tls=pthread
+        libgc_threads=pthreads
+        with_sigaltstack=yes
+        use_sigposix=yes
+	    support_boehm=no
+	    with_gc=sgen
+	    ;;
 	*-*-fuchsia*)
 		AC_DEFINE(DISABLE_PORTABILITY,1,[Disable the io-portability layer])
 		AC_DEFINE(HOST_FUCHSIA,1,[Targeting the Fuchsia platform])
@@ -585,6 +594,7 @@ AM_CONDITIONAL(TARGET_WIN32, test x$target_win32 = xyes)
 AM_CONDITIONAL(HOST_LINUX, echo x$target_os | grep -q linux)
 AM_CONDITIONAL(HOST_DARWIN, test x$host_darwin = xyes)
 AM_CONDITIONAL(HOST_SIGPOSIX, test x$use_sigposix = xyes)
+AM_CONDITIONAL(HOST_SERENITY, test x$serenity = xyes)
 AM_CONDITIONAL(HOST_ANDROID, test x$platform_android = xyes)
 AM_CONDITIONAL(HOST_TIZEN, test x$platform_tizen = xyes)
 AM_CONDITIONAL(HOST_IOS, test x$platform_ios = xyes)
@@ -4465,6 +4475,9 @@ case "$host" in
 		  haiku*)
 			LIBC=libroot.so
 			;;
+		  serenity*)
+		    LIBC=libc.so
+		    ;;
 		  linux*)
 			AOT_SUPPORTED="yes"
 			BTLS_SUPPORTED=yes
@@ -4732,6 +4745,9 @@ if test "x$host" != "x$target"; then
    i686*-linux-*)
 		TARGET=X86;
 		;;
+   *serenity*)
+        TARGET=X86;
+        ;;
    i*86-apple-*)
 		TARGET=X86;
 		;;
@@ -6672,6 +6688,22 @@ elif case $host_os in haiku*) true;; *) false;; esac; then
 	AC_MSG_RESULT(haiku)
 
 	MONO_NATIVE_PLATFORM_TYPE="MONO_NATIVE_PLATFORM_TYPE_HAIKU"
+elif case $host_os in serenity*) true;; *) false;; esac; then
+	mono_native_text="Serenity"
+	MONO_NATIVE_CC=$CC
+	MONO_NATIVE_CXX=$CXX
+	MONO_NATIVE_CPPFLAGS=$CPPFLAGS
+	MONO_NATIVE_CXXFLAGS=$CXXFLAGS
+	MONO_NATIVE_CFLAGS=$CFLAGS
+	MONO_NATIVE_LDFLAGS=$LDFLAGS
+
+	mono_native=yes
+	mono_native_compat=no
+	MONO_NATIVE_PLATFORM=serenity
+	AC_MSG_CHECKING([Mono.Native support])
+	AC_MSG_RESULT(serenity)
+
+	MONO_NATIVE_PLATFORM_TYPE="MONO_NATIVE_PLATFORM_TYPE_SERENITY"
 elif test x$platform_android = xyes; then
 	mono_native_text="Android"
 	MONO_NATIVE_CC=$CC
@@ -6731,6 +6763,7 @@ AM_CONDITIONAL(MONO_NATIVE_PLATFORM_ANDROID, test x$MONO_NATIVE_PLATFORM = xandr
 AM_CONDITIONAL(MONO_NATIVE_PLATFORM_FREEBSD, test x$MONO_NATIVE_PLATFORM = xfreebsd)
 AM_CONDITIONAL(MONO_NATIVE_PLATFORM_NETBSD, test x$MONO_NATIVE_PLATFORM = xnetbsd)
 AM_CONDITIONAL(MONO_NATIVE_PLATFORM_HAIKU, test x$MONO_NATIVE_PLATFORM = xhaiku)
+AM_CONDITIONAL(MONO_NATIVE_PLATFORM_SERENITY, test x$MONO_NATIVE_PLATFORM = xserenity)
 
 MONO_NATIVE_PLATFORM_TYPE_COMPAT="$MONO_NATIVE_PLATFORM_TYPE | MONO_NATIVE_PLATFORM_TYPE_COMPAT"
 MONO_NATIVE_PLATFORM_TYPE_UNIFIED="$MONO_NATIVE_PLATFORM_TYPE | MONO_NATIVE_PLATFORM_TYPE_UNIFIED"

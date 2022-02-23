@@ -80,6 +80,11 @@
 #endif
 #define USE_SYSCTL 1
 #endif
+#if defined(HOST_SERENITY)
+#undef HAVE_SCHED_SETAFFINITY
+#undef HAVE_SCHED_GETAFFINITY
+#undef HAVE_GETRUSAGE
+#endif
 
 #ifdef HAVE_SCHED_GETAFFINITY
 #  ifndef GLIBC_HAS_CPU_COUNT

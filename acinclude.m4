@@ -32,6 +32,20 @@ i?86-*-linux*|i?86-apple-darwin*|x86_64-*-linux*|powerpc-*-linux*|powerpc64-*-li
 i?86-apple-darwin*|arm-apple-darwin*)
     pic_options='-fno-common'
     ;;
+*-serenity)
+    dnl Temporary heck to get around the fact that libtool normally has no idea how to build shared objects for Serenity
+    pic_options='-fPIC'
+    enable_shared=yes
+    dolt_supported=no
+    version_type=linux
+    need_lib_prefix=no
+    need_version=no
+    library_names_spec='$libname$release$shared_ext$versuffix $libname$release$shared_ext$major $libname$shared_ext'
+    soname_spec='$libname$release$shared_ext$major'
+    shlibpath_var=LD_LIBRARY_PATH
+    shlibpath_overrides_runpath=no
+    hardcode_into_libs=yes
+    ;;
 *)
     dolt_supported=no
     ;;

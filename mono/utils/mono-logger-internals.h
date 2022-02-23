@@ -84,6 +84,7 @@ mono_tracev (GLogLevelFlags level, MonoTraceMask mask, const char *format, va_li
 G_GNUC_UNUSED MONO_ATTR_FORMAT_PRINTF(3,4) static void
 mono_trace (GLogLevelFlags level, MonoTraceMask mask, const char *format, ...)
 {
+    // TODO: Check into why this isn't working on Serenity
 	if (MONO_TRACE_IS_TRACED (level, mask)) {
 		va_list args;
 		va_start (args, format);

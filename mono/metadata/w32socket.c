@@ -500,12 +500,14 @@ convert_sockopt_level_and_name (MonoSocketOptionLevel mono_level, MonoSocketOpti
 		case SocketOptionName_ReceiveBuffer:
 			*system_name = SO_RCVBUF;
 			break;
+#if !defined(HOST_SERENITY)
 		case SocketOptionName_SendLowWater:
 			*system_name = SO_SNDLOWAT;
 			break;
 		case SocketOptionName_ReceiveLowWater:
 			*system_name = SO_RCVLOWAT;
 			break;
+#endif
 		case SocketOptionName_SendTimeout:
 			*system_name = SO_SNDTIMEO;
 			break;

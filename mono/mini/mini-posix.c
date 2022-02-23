@@ -100,6 +100,10 @@
 #endif
 #include "mono/utils/mono-tls-inline.h"
 
+#if defined(HOST_SERENITY)
+#undef HAVE_CLOCK_NANOSLEEP
+#endif
+
 #if defined(HOST_WATCHOS)
 
 void

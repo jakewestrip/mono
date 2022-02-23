@@ -910,6 +910,9 @@ mono_arch_ip_from_context (void *sigctx)
 #if defined(HOST_WATCHOS)
 	printf("WARNING: mono_arch_ip_from_context() called!\n");
 	return (NULL);
+#elif defined(HOST_SERENITY)
+    ucontext_t *ctx = (ucontext_t*)sigctx;
+	return (gpointer)(ctx->uc_mcontext.eip);
 #elif defined(MONO_CROSS_COMPILE)
 	g_assert_not_reached ();
 	return NULL;

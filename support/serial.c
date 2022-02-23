@@ -175,7 +175,7 @@ discard_buffer (int fd, gboolean input)
 gint32
 get_bytes_in_buffer (int fd, gboolean input)
 {
-#if defined(__HAIKU__)
+#if defined(__HAIKU__) || defined(HOST_SERENITY)
 	/* FIXME: Haiku doesn't support TIOCOUTQ nor FIONREAD on fds */
 	return -1;
 #define TIOCOUTQ 0
@@ -450,6 +450,9 @@ set_attributes (int fd, int baud_rate, MonoParity parity, int dataBits, MonoStop
 static gint32
 get_signal_code (MonoSerialSignal signal)
 {
+#if defined(HOST_SERENITY)
+    return 0;
+#else
 	switch (signal) {
 		case Cd:
 			return TIOCM_CAR;
@@ -467,11 +470,15 @@ get_signal_code (MonoSerialSignal signal)
 
 	/* Not reached */
 	return 0;
+#endif
 }
 
 static MonoSerialSignal
 get_mono_signal_codes (int signals)
 {
+#if defined(HOST_SERENITY)
+    return 0;
+#else
 	MonoSerialSignal retval = NoneSignal;
 
 	if ((signals & TIOCM_CAR) != 0)
@@ -486,11 +493,15 @@ get_mono_signal_codes (int signals)
 		retval |= Rts;
 
 	return retval;
+#endif
 }
 
 MonoSerialSignal
 get_signals (int fd, gint32 *error)
 {
+#if defined(HOST_SERENITY)
+	return -1;
+#else
 	int signals;
 
 	*error = 0;
@@ -501,11 +512,15 @@ get_signals (int fd, gint32 *error)
 	}
 	
 	return get_mono_signal_codes (signals);
+#endif
 }
 
 gint32
 set_signal (int fd, MonoSerialSignal signal, gboolean value)
 {
+#if defined(HOST_SERENITY)
+    return -1;
+#else
 	int signals, expected, activated;
 
 	expected = get_signal_code (signal);
@@ -533,6 +548,7 @@ set_signal (int fd, MonoSerialSignal signal, gboolean value)
 		return -1;
 	
 	return 1;
+#endif
 }
 
 int

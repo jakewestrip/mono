@@ -7419,7 +7419,10 @@ MonoStringHandle
 ves_icall_System_IO_DriveInfo_GetDriveFormat (const gunichar2 *path, gint32 path_length, MonoError *error)
 {
 	gunichar2 volume_name [MAX_PATH + 1];
-	
+#if defined(HOST_SERENITY)
+    printf("WARNING: ves_icall_System_IO_DriveInfo_GetDriveFormat called!\n");
+    return NULL_HANDLE_STRING;
+#endif
 	if (mono_w32file_get_file_system_type (path, volume_name, MAX_PATH + 1) == FALSE)
 		return NULL_HANDLE_STRING;
 	return mono_string_new_utf16_handle (mono_domain_get (), volume_name, g_utf16_len (volume_name), error);

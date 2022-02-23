@@ -346,7 +346,12 @@ mono_memory_barrier_process_wide (void)
 	g_assert (status == 0);
 
 	if (memory_barrier_process_wide_helper_page == NULL) {
+#if defined(HOST_SERENITY)
+        printf("WARNING: mono_memory_barrier_process_wide called!\n");
+        status = 0;
+#else
 		status = posix_memalign (&memory_barrier_process_wide_helper_page, mono_pagesize (), mono_pagesize ());
+#endif
 		g_assert (status == 0);
 	}
 

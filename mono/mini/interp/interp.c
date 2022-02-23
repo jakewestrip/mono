@@ -6766,7 +6766,11 @@ call:
 		MINT_IN_CASE(MINT_ATAN2) MATH_BINOP(atan2); MINT_IN_BREAK;
 		MINT_IN_CASE(MINT_POW) MATH_BINOP(pow); MINT_IN_BREAK;
 		MINT_IN_CASE(MINT_FMA)
+#if defined(HOST_SERENITY)
+            LOCAL_VAR (ip [1], double) = (LOCAL_VAR (ip [2], double) * LOCAL_VAR (ip [3], double)) + LOCAL_VAR (ip [4], double);
+#else
 			LOCAL_VAR (ip [1], double) = fma (LOCAL_VAR (ip [2], double), LOCAL_VAR (ip [3], double), LOCAL_VAR (ip [4], double));
+#endif
 			ip += 5;
 			MINT_IN_BREAK;
 		MINT_IN_CASE(MINT_SCALEB)
@@ -6778,7 +6782,11 @@ call:
 			double x = LOCAL_VAR (ip [2], double);
 			if (FP_ILOGB0 != INT_MIN && x == 0.0)
 				result = INT_MIN;
-			else if (FP_ILOGBNAN != INT_MAX && isnan(x))
+#if defined(HOST_SERENITY)
+			else if (FP_ILOGNAN != INT_MAX && isnan(x))
+#else
+            else if (FP_ILOGBNAN != INT_MAX && isnan(x))
+#endif
 				result = INT_MAX;
 			else
 				result = ilogb (x);
@@ -6819,7 +6827,11 @@ call:
 		MINT_IN_CASE(MINT_ATAN2F) MATH_BINOPF(atan2f); MINT_IN_BREAK;
 		MINT_IN_CASE(MINT_POWF) MATH_BINOPF(powf); MINT_IN_BREAK;
 		MINT_IN_CASE(MINT_FMAF)
+#if defined(HOST_SERENITY)
+            LOCAL_VAR (ip [1], float) = (LOCAL_VAR (ip [2], float) * LOCAL_VAR (ip [3], float)) + LOCAL_VAR (ip [4], float);
+#else
 			LOCAL_VAR (ip [1], float) = fmaf (LOCAL_VAR (ip [2], float), LOCAL_VAR (ip [3], float), LOCAL_VAR (ip [4], float));
+#endif
 			ip += 5;
 			MINT_IN_BREAK;
 		MINT_IN_CASE(MINT_SCALEBF)
@@ -6831,7 +6843,11 @@ call:
 			float x = LOCAL_VAR (ip [2], float);
 			if (FP_ILOGB0 != INT_MIN && x == 0.0)
 				result = INT_MIN;
-			else if (FP_ILOGBNAN != INT_MAX && isnan(x))
+#if defined(HOST_SERENITY)
+            else if (FP_ILOGNAN != INT_MAX && isnan(x))
+#else
+            else if (FP_ILOGBNAN != INT_MAX && isnan(x))
+#endif
 				result = INT_MAX;
 			else
 				result = ilogbf (x);
